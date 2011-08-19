@@ -1,7 +1,21 @@
 package br.android.olhai;
 
+/*
+ * @author Marcos
+ * 
+ * A classe ItemCardapio armazena duas strings, uma contendo o nome 
+ * e a outra contendo o tipo do alimento.
+ */
+
 public class ItemCardapio {
-	String nomePrato, tipoPrato;
+	/*
+	 * Nome do prato
+	 */
+	String nomePrato;
+	/*
+	 * Tipo do prato
+	 */
+	String tipoPrato;
 
 	/*
 	 * @param nome nome do prato
