@@ -1,16 +1,24 @@
 package br.android.olhai;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.client.ClientProtocolException;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -21,6 +29,7 @@ public class MainActivity extends Activity {
 	ArrayAdapter<String> adaptadorUniversidade;
 	Spinner spinnerUniversidade;
 	int diaDaSemana = 0;
+	private ListView lista;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,9 +42,41 @@ public class MainActivity extends Activity {
 
 		adaptadorCardapio = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, dscCardapioDoDia);
-		((ListView) findViewById(R.id.listCardapio))
-				.setAdapter(adaptadorCardapio);
+		lista = ((ListView) findViewById(R.id.listCardapio));
+		lista.setAdapter(adaptadorCardapio);
 
+		lista.setOnItemClickListener(new OnItemClickListener() {
+
+				public void onItemClick(AdapterView<?> adapter, View view, int posicao,long id) {
+					final ProgressDialog progress = ProgressDialog.show(MainActivity.this, "Aguarde...", "Pegando dados da web",true);
+		    		
+		    		final Toast aviso = Toast.makeText(MainActivity.this, "Dados Enviados com sucesso!!!", Toast.LENGTH_LONG);
+		    			
+		    		new Thread(new Runnable() {
+						public void run() {
+							String retorno = "";
+							try{
+								Thread.sleep(2000);
+								Sincronizer s = new Sincronizer();
+								retorno = s.getJSONFromAplication();
+								
+								Log.i("Retorno: ", retorno);
+							}catch (ClientProtocolException e) {
+								Log.e("Erro", "JSON", e);
+							}catch (IOException e) {
+								Log.e("Erro", "JSON", e);
+							}catch (InterruptedException e) {
+								Log.e("Erro", "JSON", e);
+							}
+							aviso.show();
+							progress.dismiss();
+						}
+					}).start();
+					
+				}
+	        	 
+			});
+		
 		adaptadorUniversidade = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, listaDeUniversidades);
 		spinnerUniversidade = ((Spinner) findViewById(R.id.spinnerUniversidade));
