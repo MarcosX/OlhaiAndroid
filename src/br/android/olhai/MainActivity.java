@@ -3,9 +3,12 @@ package br.android.olhai;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -13,13 +16,29 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
+	/*
+	 * Cardapios da semana
+	 */
 	CardapioSemana cardapioDaSemana;
+	/*
+	 * Descrição do carápio de um dia que será exibido na ListView
+	 */
 	ArrayList<String> dscCardapioDoDia;
+	/*
+	 * Adaptador para a ListView que exibe o cardápio do dia
+	 */
 	ArrayAdapter<String> adaptadorCardapio;
+	/*
+	 * Lista de Universidades possíveis
+	 */
 	String[] listaDeUniversidades = { "UECE", "---" };
+	/*
+	 * Adaptador para o Spinner de seleção de Universidade
+	 */
 	ArrayAdapter<String> adaptadorUniversidade;
-	Spinner spinnerUniversidade;
+	/*
+	 * Dia da semana considerado para buscar o cardápio
+	 */
 	int diaDaSemana = 0;
 
 	/** Called when the activity is first created. */
@@ -27,10 +46,21 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
 		cardapioDaSemana = new CardapioSemana();
 		dscCardapioDoDia = new ArrayList<String>();
+		setAdapters();
+		carregarCardapio();
+		exibirCardapio();
+		onClickBtnVerCardapio();
+		onClickBtnAmanha();
+		onClickBtnOntem();
+	}
 
+	/*
+	 * Cria os adapters e atribui para a ListView do cardápio e o Spinner de
+	 * escolha da Universidade
+	 */
+	private void setAdapters() {
 		adaptadorCardapio = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, dscCardapioDoDia);
 		((ListView) findViewById(R.id.listCardapio))
@@ -38,32 +68,14 @@ public class MainActivity extends Activity {
 
 		adaptadorUniversidade = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, listaDeUniversidades);
-		spinnerUniversidade = ((Spinner) findViewById(R.id.spinnerUniversidade));
-		spinnerUniversidade.setAdapter(adaptadorUniversidade);
+		((Spinner) findViewById(R.id.spinnerUniversidade))
+				.setAdapter(adaptadorUniversidade);
+	}
 
-		carregarCardapio();
-		exibirCardapio();
-
-		((Button) findViewById(R.id.btnVerCardapio))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						carregarCardapio();
-						exibirCardapio();
-					}
-				});
-
-		((Button) findViewById(R.id.btnAmanha))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						alterarData(true);
-						exibirCardapio();
-					}
-				});
+	/*
+	 * Atribui o método de chamada quando o botão Ontem for clicado
+	 */
+	private void onClickBtnOntem() {
 		((Button) findViewById(R.id.btnOntem))
 				.setOnClickListener(new OnClickListener() {
 
@@ -76,6 +88,44 @@ public class MainActivity extends Activity {
 				});
 	}
 
+	/*
+	 * Atribui o método de chamada quando o botão Amanhã for clicado
+	 */
+	private void onClickBtnAmanha() {
+		((Button) findViewById(R.id.btnAmanha))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						alterarData(true);
+						exibirCardapio();
+					}
+				});
+	}
+
+	/*
+	 * Atribui o método de chamada quando o botão Ver Cardápio for clicado
+	 */
+	private void onClickBtnVerCardapio() {
+		((Button) findViewById(R.id.btnVerCardapio))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						carregarCardapio();
+						exibirCardapio();
+					}
+				});
+	}
+
+	/*
+	 * Altera o dia da semana que está sendo visualizado
+	 * 
+	 * @param isAmanha boolean que indica se o dia deve ser incrementado, caso o
+	 * botão clicado seja amanhã, ou decrementado, caso o botão clicado seja
+	 * ontem
+	 */
 	private void alterarData(boolean isAmanha) {
 		if (isAmanha == true) {
 			if (diaDaSemana == 4)
@@ -88,7 +138,12 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void exibirCardapio() {
+	/*
+	 * altera a descrição do cardápio para o dia da semana de acordo com a
+	 * variável diaDaSemana e notifica o adaptador da ListView que o conjunto de
+	 * dados mudou
+	 */
+	private void exibirCardapio() {
 		dscCardapioDoDia.clear();
 		for (int i = 0; i < cardapioDaSemana.getDscCardapio(diaDaSemana).size(); i++) {
 			dscCardapioDoDia.add(cardapioDaSemana.getDscCardapio(diaDaSemana)
@@ -98,7 +153,11 @@ public class MainActivity extends Activity {
 		mostrarData();
 	}
 
-	public void mostrarData() {
+	/*
+	 * Altera o dia na interface de acordo com a variável diaDaSemana. Modifica
+	 * o texto do topo da aplicação e os botões de ontem e amanhã
+	 */
+	private void mostrarData() {
 		TextView dia = ((TextView) findViewById(R.id.textViewHoje));
 		Button ontem = ((Button) findViewById(R.id.btnOntem));
 		Button amanha = ((Button) findViewById(R.id.btnAmanha));
@@ -137,11 +196,16 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void carregarCardapio() {
-		if (spinnerUniversidade.getSelectedItemPosition() == 0) {
-			cardapioDaSemana.AdicionarDeArquivo("UECE");
+	/*
+	 * Carrega o cardapio da semana de acordo com a universidade selecionada no
+	 * spinner
+	 */
+	private void carregarCardapio() {
+		if (((Spinner) findViewById(R.id.spinnerUniversidade))
+				.getSelectedItemPosition() == 0) {
+			cardapioDaSemana.carregarDeArquivo("UECE");
 		} else {
-			cardapioDaSemana.AdicionarDeArquivo(null);
+			cardapioDaSemana.carregarDeArquivo(null);
 		}
 	}
 }

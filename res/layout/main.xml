@@ -24,7 +24,8 @@
 			android:layout_height="wrap_content" android:layout_width="fill_parent">
 			<Spinner android:id="@+id/spinnerUniversidade"
 				android:layout_height="wrap_content" android:layout_width="wrap_content"
-				android:layout_weight="1930.44" android:focusable="false" android:focusableInTouchMode="false"/>
+				android:layout_weight="1930.44" android:focusable="false"
+				android:focusableInTouchMode="false" />
 			<Button android:text="Ver Cardápio" android:layout_height="wrap_content"
 				android:layout_weight="12.08" android:layout_width="wrap_content"
 				android:id="@+id/btnVerCardapio"></Button>

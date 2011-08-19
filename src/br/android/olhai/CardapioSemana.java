@@ -2,10 +2,21 @@ package br.android.olhai;
 
 import java.util.ArrayList;
 
+/*
+ * A classe CardapioSemana agrega cinco cardapios, um para cada dia da semana. As informações
+ * dos cardápios de cada dia são obtidas através de um arquivo.
+ */
+
 public class CardapioSemana {
 
+	/*
+	 * Conjunto de cardapios de um dia
+	 */
 	private ArrayList<CardapioDia> cardapio = new ArrayList<CardapioDia>();
-	
+
+	/*
+	 * Cria 5 cardapios de um dia
+	 */
 	public CardapioSemana() {
 		for (int i = 0; i < 5; i++) {
 			cardapio.add(new CardapioDia());
@@ -13,9 +24,12 @@ public class CardapioSemana {
 	}
 
 	/*
+	 * Lê as informações do cardápio de um arquivo e insere na lista de
+	 * cardápios
+	 * 
 	 * @param nomeDoArquivo nome do arquivo com os dados
 	 */
-	public void AdicionarDeArquivo(String nomeDoArquivo) {
+	public void carregarDeArquivo(String nomeDoArquivo) {
 		// TODO Implementar método de parse do arquivo
 		limparCardapio();
 		if (nomeDoArquivo == null)
@@ -61,14 +75,23 @@ public class CardapioSemana {
 		}
 	}
 
+	/*
+	 * Limpa o conteúdo dos cinco cardápios
+	 */
+	
 	private void limparCardapio() {
 		for (CardapioDia cardapioTmp : cardapio) {
 			cardapioTmp.limparCardapio();
 		}
 	}
 
+	
+	/*
+	 * @return descrição do cardápio de um dia
+	 */
 	public ArrayList<String> getDscCardapio(int diaDaSemana) {
-		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscCardapio().clone();
+		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscCardapio()
+				.clone();
 	}
 
 }
