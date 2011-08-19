@@ -23,13 +23,11 @@ public class Sincronizer {
 		//String encode = url + URLEncoder.encode(idUniversidade) + url2 + URLEncoder.encode(data);
 		HttpGet httpGet = new HttpGet(encode);
 		HttpResponse response;
-		InputStream is = null;
 		StringBuffer sb = new StringBuffer();
 		response = httpClient.execute(httpGet);
 		HttpEntity entity = response.getEntity();
 		if(entity != null){
-			is = entity.getContent();
-			Scanner s = new Scanner(is);
+			Scanner s = new Scanner(entity.getContent());
 			while(s.hasNext()){
 				sb.append(s.next());
 			}

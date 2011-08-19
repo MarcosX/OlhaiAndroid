@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -179,10 +180,20 @@ public class MainActivity extends Activity {
 	}
 
 	public void carregarCardapio() {
-		if (spinnerUniversidade.getSelectedItemPosition() == 0) {
-			cardapioDaSemana.AdicionarDeArquivo("UECE");
-		} else {
-			cardapioDaSemana.AdicionarDeArquivo(null);
+		try {
+			if (spinnerUniversidade.getSelectedItemPosition() == 0) {
+				cardapioDaSemana.AdicionarDeArquivo("UECE");
+			} else {
+				cardapioDaSemana.AdicionarDeArquivo(null);
+			}
+		} catch (ClientProtocolException e) {
+			Log.e("Erro", "JSON", e);
+		} catch (JSONException e) {
+			Log.e("Erro", "JSON", e);
+		} catch (IOException e) {
+			Log.e("Erro", "JSON", e);
+		} catch(Exception e){
+			Log.e("Erro", "JSON", e);
 		}
 	}
 }
