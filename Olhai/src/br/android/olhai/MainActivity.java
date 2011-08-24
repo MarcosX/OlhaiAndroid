@@ -54,9 +54,9 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		cardapioDaSemana = new CardapioSemana();
 		dscPratoDoDia = new ArrayList<String>();
 		detalhesPrato = new ArrayList<String>();
-		cardapioDaSemana = new CardapioSemana();
 		setAdapters();
 		setOnClick();
 		carregarCardapio();
