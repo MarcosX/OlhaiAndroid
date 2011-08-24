@@ -20,14 +20,15 @@ public class CardapioSemana {
 	 * Conjunto de cardapios de um dia
 	 */
 	public ArrayList<CardapioDia> cardapio;
-	public CardapioSemana cardapioSemana;
+
 	/*
 	 * Lê as informações do cardápio de um arquivo e insere na lista de
 	 * cardápios
 	 * 
 	 * @param nomeDoArquivo nome do arquivo com os dados
 	 */
-	public void carregarDeArquivo(String nomeDoArquivo) throws ClientProtocolException, JSONException, IOException {
+	public void carregarDeArquivo(String nomeDoArquivo)
+			throws ClientProtocolException, JSONException, IOException {
 		cardapio = new ArrayList<CardapioDia>();
 		for (int i = 0; i < DIAS_DA_SEMANA; i++) {
 			cardapio.add(new CardapioDia());
@@ -36,14 +37,19 @@ public class CardapioSemana {
 		if (nomeDoArquivo == null)
 			return;
 		if (nomeDoArquivo == "UECE") {
+
 			Sincronizer sincronizer = new Sincronizer();
-			JSONObject jsonObject = (JSONObject) new JSONTokener(sincronizer .getJSONFromAplication()).nextValue();
-			String[] diasDaSemana = {"segunda", "terca", "quarta", "quinta", "sexta"};
+			JSONObject jsonObject = (JSONObject) new JSONTokener(
+					sincronizer.getJSONFromAplication()).nextValue();
+			String[] diasDaSemana = { "segunda", "terca", "quarta", "quinta",
+					"sexta" };
 			for (int j = 0; j < 5; j++) {
-				JSONObject jsonCardapioDoDia = jsonObject.getJSONObject(diasDaSemana[j]);
+				JSONObject jsonCardapioDoDia = jsonObject
+						.getJSONObject(diasDaSemana[j]);
 				JSONArray jsonArray = jsonCardapioDoDia.getJSONArray("itens");
-				for(int i = 0; i < jsonArray.length(); i++){
-					cardapio.get(j).inserirItem(new ItemCardapio(jsonArray.getString(i), ""));
+				for (int i = 0; i < jsonArray.length(); i++) {
+					cardapio.get(j).inserirItem(
+							new ItemCardapio(jsonArray.getString(i), ""));
 				}
 			}
 		}
@@ -52,20 +58,28 @@ public class CardapioSemana {
 	/*
 	 * Limpa o conteúdo dos cinco cardápios
 	 */
-	
+
 	private void limparCardapio() {
 		for (CardapioDia cardapioTmp : cardapio) {
 			cardapioTmp.limparCardapio();
 		}
 	}
 
-	
 	/*
 	 * @return descrição do cardápio de um dia
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getDscCardapio(int diaDaSemana) {
-		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscCardapio()
+	public ArrayList<String> getDscNomePrato(int diaDaSemana) {
+		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscNomePrato()
+				.clone();
+	}
+
+	/*
+	 * @return descrição do cardápio de um dia
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getDetalhesPrato(int diaDaSemana) {
+		return (ArrayList<String>) cardapio.get(diaDaSemana).getDetalhesPrato()
 				.clone();
 	}
 
