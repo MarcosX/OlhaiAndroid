@@ -26,8 +26,9 @@ public class Sincronizer {
 		HttpEntity entity = response.getEntity();
 		if(entity != null){
 			Scanner s = new Scanner(entity.getContent());
+			s.useDelimiter(",");
 			while(s.hasNext()){
-				sb.append(s.next());
+				sb.append(s.next()).append(",");
 			}
 		}
 		

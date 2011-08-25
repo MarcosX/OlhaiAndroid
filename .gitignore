@@ -1,0 +1,14 @@
+.classpath
+/.classpath
+.project
+.mymetadata
+.settings/
+WebRoot/WEB-INF/classes/
+target/
+.myeclipse/
+.DS_Store
+bin
+Thumbs.db
+build/
+build
+Olhai.apk
