@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/menuConfiguracoes" android:icon="@drawable/icon"
+	<item android:id="@+id/menuConfiguracoes" android:icon="@android:drawable/ic_menu_preferences"
 		android:title="Configurações">
 		<menu>
 			<group android:checkableBehavior="single">
@@ -7,5 +7,8 @@
 				<item android:id="@+id/opcaoNenhuma" android:title="Nenhuma" />
 			</group>
 		</menu>
+	</item>
+	<item android:id="@+id/menuSobre" android:icon="@android:drawable/ic_menu_help"
+		android:title="Sobre">
 	</item>
 </menu>

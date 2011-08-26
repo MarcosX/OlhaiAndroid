@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -72,20 +73,34 @@ public class MainActivity extends Activity implements OnTouchListener {
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		int escolha = universidadeSelecionada;
 		switch (item.getItemId()) {
-		case R.id.opcaoUece:
-			universidadeSelecionada = UECE;
-			((TextView) findViewById(R.id.textViewUniversidadeEstatico))
-					.setText("Visualizando cardápio de UECE");
-			break;
-		case R.id.opcaoNenhuma:
-			universidadeSelecionada = NENHUMA_UNIVERSIDADE;
-			((TextView) findViewById(R.id.textViewUniversidadeEstatico))
-					.setText("Selecione a Universidade no menu Configurações");
-			break;
-		case R.id.menuConfiguracoes:
-			return true;
-		default:
-			break;
+			case R.id.opcaoUece:
+				universidadeSelecionada = UECE;
+				((TextView) findViewById(R.id.textViewUniversidadeEstatico))
+						.setText("Visualizando cardápio de UECE");
+				break;
+			case R.id.opcaoNenhuma:
+				universidadeSelecionada = NENHUMA_UNIVERSIDADE;
+				((TextView) findViewById(R.id.textViewUniversidadeEstatico))
+						.setText("Selecione a Universidade no menu Configurações");
+				break;
+			case R.id.menuConfiguracoes:
+				return true;
+			case R.id.menuSobre:
+				Dialog dialog = new Dialog(MainActivity.this);
+				
+                dialog.setContentView(R.layout.menu_sobre);
+                dialog.setTitle("Olhai! RU");
+                dialog.setCancelable(true);
+                
+                //set up text
+                TextView text = (TextView) dialog.findViewById(R.id.TextView01);
+                text.setText(R.string.textoMenuSobre);
+ 
+                
+                dialog.show();
+				break;
+			default:
+				break;
 		}
 		if (universidadeSelecionada == escolha) {
 			return true;
@@ -101,7 +116,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		((Button) findViewById(R.id.btnOntem))
 				.setOnClickListener(new OnClickListener() {
 
-					@Override
+					
 					public void onClick(View v) {
 						alterarData(false);
 						exibirCardapio();
@@ -110,7 +125,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		((Button) findViewById(R.id.btnAmanha))
 				.setOnClickListener(new OnClickListener() {
 
-					@Override
+					
 					public void onClick(View v) {
 						alterarData(true);
 						exibirCardapio();
@@ -119,7 +134,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		((ListView) findViewById(R.id.listCardapio))
 				.setOnItemClickListener(new OnItemClickListener() {
 
-					@Override
+					
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int arg2, long arg3) {
 						AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -252,7 +267,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		exibirCardapio();
 	}
 
-	@Override
+	
 	public boolean onTouch(View v, MotionEvent event) {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:

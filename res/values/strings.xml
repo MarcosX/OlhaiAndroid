@@ -2,4 +2,16 @@
 <resources>
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Olhai!</string>
+    <string name="textoMenuSobre">
+    	<b>Versão do Aplicativo:</b>
+    	\n\t0.4
+    	\n\n
+    	<b>Autores:</b>
+    	\n\t Marcos Antônio
+    	\n\t Thiago Nascimento
+    	\n\t Yuri Adams
+    	
+    	
+    </string>
+    <string name="versao">0.4</string>
 </resources>
