@@ -11,8 +11,10 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -20,32 +22,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
-	/*
-	 * Cardapios da semana
-	 */
+public class MainActivity extends Activity implements OnTouchListener {
 	CardapioSemana cardapioDaSemana;
-	/*
-	 * Descrição do carápio de um dia que será exibido na ListView
-	 */
 	ArrayList<String> dscPratoDoDia;
-	/*
-	 * Descrição do carápio de um dia que será exibido na ListView
-	 */
 	ArrayList<String> detalhesPrato;
-	/*
-	 * Adaptador para a ListView que exibe o cardápio do dia
-	 */
-
 	ArrayAdapter<String> adaptadorCardapio;
-	/*
-	 * Dia da semana considerado para buscar o cardápio
-	 */
 	int diaDaSemana = 0;
-	/*
-	 * Universidade selecionada na configuração
-	 */
 	int universidadeSelecionada = 0;
+	private float downEventX;
 	private static final int UECE = 1;
 	private static final int NENHUMA_UNIVERSIDADE = 0;
 
@@ -54,6 +38,8 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		findViewById(R.id.layoutGlobal).setOnTouchListener(
+				(OnTouchListener) this);
 		cardapioDaSemana = new CardapioSemana();
 		dscPratoDoDia = new ArrayList<String>();
 		detalhesPrato = new ArrayList<String>();
@@ -264,5 +250,29 @@ public class MainActivity extends Activity {
 			Log.e("Erro", "JSON", e);
 		}
 		exibirCardapio();
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			downEventX = event.getX();
+			break;
+		case MotionEvent.ACTION_UP:
+			float upEventX = event.getX();
+			if (downEventX > upEventX) {
+				if (diaDaSemana < 4)
+					diaDaSemana++;
+			} else if (downEventX < upEventX) {
+				if (diaDaSemana > 0)
+					diaDaSemana--;
+			}
+			exibirCardapio();
+			break;
+
+		default:
+			break;
+		}
+		return true;
 	}
 }
