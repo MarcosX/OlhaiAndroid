@@ -37,7 +37,6 @@ public class CardapioSemana {
 		if (nomeDoArquivo == null)
 			return;
 		if (nomeDoArquivo == "UECE") {
-			/*
 			Sincronizer sincronizer = new Sincronizer();
 			JSONObject jsonObject = (JSONObject) new JSONTokener(
 					sincronizer.getJSONFromAplication()).nextValue();
@@ -52,12 +51,6 @@ public class CardapioSemana {
 							new ItemCardapio(jsonArray.getString(i), ""));
 				}
 			}
-			*/
-			cardapio.get(0).inserirItem(new ItemCardapio("Segunda", ""));
-			cardapio.get(1).inserirItem(new ItemCardapio("Terça", ""));
-			cardapio.get(2).inserirItem(new ItemCardapio("Quarta", ""));
-			cardapio.get(3).inserirItem(new ItemCardapio("Quinta", ""));
-			cardapio.get(4).inserirItem(new ItemCardapio("Sexta", ""));
 		}
 	}
 
