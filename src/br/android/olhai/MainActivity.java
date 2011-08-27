@@ -92,11 +92,6 @@ public class MainActivity extends Activity implements OnTouchListener {
                 dialog.setTitle("Olhai! RU");
                 dialog.setCancelable(true);
                 
-                //set up text
-                TextView text = (TextView) dialog.findViewById(R.id.TextView01);
-                text.setText(R.string.textoMenuSobre);
- 
-                
                 dialog.show();
 				break;
 			default:

@@ -1,18 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="fill_parent" android:layout_height="fill_parent">
- 
-<ImageView android:id="@+id/ImageView01"
- android:layout_width="wrap_content" android:layout_height="wrap_content"
- android:layout_centerHorizontal="true" />
- 
- <ScrollView android:id="@+id/ScrollView01"
- android:layout_width="fill_parent" android:layout_below="@+id/ImageView01"
- android:layout_height="fill_parent">
- 
- <TextView android:text="@+id/TextView01" android:id="@+id/TextView01"
- android:layout_width="fill_parent" android:layout_height="fill_parent" />
- 
- </ScrollView>
+
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="200dp" 
+	android:layout_width="fill_parent">
+		<LinearLayout 
+			android:layout_width="fill_parent" 
+			android:orientation="vertical" 
+			android:id="@+menuSobre/linearLayout1" 
+			android:layout_height="wrap_content" 
+			android:layout_alignParentTop="true" 
+			android:layout_alignLeft="@+id/autor1TextView" 
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="10dp">
+			
+				<TextView 
+					android:id="@+menuSobre/versaoDoAplicativoTextViewStatic"	
+				 	android:text="Versão do Aplicativo:"
+				 	android:textStyle="bold"
+				 	android:textSize="15dp"		 			 	
+				 	android:layout_height="wrap_content"
+				 	android:layout_width="fill_parent"				 		 	
+			 	/>	
+	 	
+				<TextView 
+					android:id="@+menuSobre/versaoDoAplicativoValor"
+				 	android:text="@string/versaoDoAplicativo"
+				 	android:layout_marginLeft="10dp"
+				 	android:layout_height="wrap_content"
+				 	android:layout_width="fill_parent"
+				/>	 	
+			 	
+				<TextView
+					android:id="@+menuSobre/autoresTextViewStatic"	
+				 	android:text="Autores:"	
+				 	android:textStyle="bold"
+				 	android:layout_marginTop="20dp"	
+				 	android:textSize="15dp"	 			 			 	
+				 	android:layout_width="fill_parent" 
+				 	android:layout_height="wrap_content" 				 	 
+				/>
+							 		
+				<TextView 
+				 	android:id="@+menuSobre/autor_1"		 	
+				 	android:text="@string/menuSobreAutor_1"
+				 	android:layout_marginLeft="10dp"
+				 	android:layout_height="wrap_content"
+				 	android:layout_width="fill_parent" 
+			 	/>
+			 	<TextView 
+				 	android:id="@+menuSobre/autor_2"		 	
+				 	android:text="@string/menuSobreAutor_2"
+				 	android:layout_marginLeft="10dp"
+				 	android:layout_height="wrap_content"
+				 	android:layout_width="fill_parent" 
+			 	/>	
+			 	<TextView 
+				 	android:id="@+menuSobre/autor_3"		 	
+				 	android:text="@string/menuSobreAutor_3"
+				 	android:layout_marginLeft="10dp"
+				 	android:layout_height="wrap_content"
+				 	android:layout_width="fill_parent" 
+			 	/>		 		 	
+				
+			
+		</LinearLayout>
+	 
  
 </RelativeLayout>
