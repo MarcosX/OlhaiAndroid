@@ -9,6 +9,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -22,6 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import br.android.olhai.util.ArquivoUtil;
 
 public class MainActivity extends Activity implements OnTouchListener {
 	CardapioSemana cardapioDaSemana;
@@ -33,6 +36,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private float downEventX;
 	private static final int UECE = 1;
 	private static final int NENHUMA_UNIVERSIDADE = 0;
+	private ArquivoUtil arquivoUtil;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -41,12 +46,21 @@ public class MainActivity extends Activity implements OnTouchListener {
 		setContentView(R.layout.main);
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
 				(OnTouchListener) this);
+
+		arquivoUtil = new ArquivoUtil(this);
+
 		cardapioDaSemana = new CardapioSemana();
 		dscPratoDoDia = new ArrayList<String>();
 		detalhesPrato = new ArrayList<String>();
 		setAdapters();
 		setOnClick();
-		carregarCardapio();
+		if (arquivoUtil.carregarIdUniversidade() != -1) {
+			carregarCardapio();
+		} else {
+			Toast.makeText(this, "ESCOLHER UNIVERSIDADE", Toast.LENGTH_SHORT)
+					.show();
+		}
+
 	}
 
 	/*
@@ -239,10 +253,32 @@ public class MainActivity extends Activity implements OnTouchListener {
 	 * menu de configurações
 	 */
 	private void carregarCardapio() {
+		final ProgressDialog progress = ProgressDialog.show(this, "Aguarde...",
+				"Carregando Cardapio..", true);
+
+		final Toast aviso = Toast.makeText(this,
+				"Cardapio carregado com sucesso!!!", Toast.LENGTH_LONG);
+
 		try {
 			switch (universidadeSelecionada) {
 			case UECE:
-				cardapioDaSemana.carregarDeArquivo("UECE");
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							cardapioDaSemana.carregarDeArquivo("UECE");
+						} catch (ClientProtocolException e) {
+							Log.e("Erro", "JSON", e);
+						} catch (JSONException e) {
+							Log.e("Erro", "JSON", e);
+						} catch (IOException e) {
+							Log.e("Erro", "JSON", e);
+						} catch (Exception e) {
+							Log.e("Erro", "JSON", e);
+						}
+						aviso.show();
+						progress.dismiss();
+					}
+				}).start();				
 				break;
 			case NENHUMA_UNIVERSIDADE:
 				cardapioDaSemana.carregarDeArquivo(null);
@@ -260,6 +296,9 @@ public class MainActivity extends Activity implements OnTouchListener {
 			Log.e("Erro", "JSON", e);
 		}
 		exibirCardapio();
+		aviso.show();
+		progress.dismiss();
+
 	}
 
 	
