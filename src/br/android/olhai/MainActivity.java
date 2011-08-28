@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
+
+
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -22,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnTouchListener {
 	CardapioSemana cardapioDaSemana;
@@ -58,7 +63,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
+		inflater.inflate(R.menu.menu_principal, menu);
 		return true;
 	};
 
@@ -71,9 +76,9 @@ public class MainActivity extends Activity implements OnTouchListener {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
-		int escolha = universidadeSelecionada;
+		//int escolha = universidadeSelecionada;
 		switch (item.getItemId()) {
-			case R.id.opcaoUece:
+			/*case R.id.opcaoUece:
 				universidadeSelecionada = UECE;
 				((TextView) findViewById(R.id.textViewUniversidadeEstatico))
 						.setText("Visualizando cardápio de UECE");
@@ -83,24 +88,31 @@ public class MainActivity extends Activity implements OnTouchListener {
 				((TextView) findViewById(R.id.textViewUniversidadeEstatico))
 						.setText("Selecione a Universidade no menu Configurações");
 				break;
+			*/
 			case R.id.menuConfiguracoes:
-				return true;
+				
+				Intent settingsActivity = 
+					 new Intent(getBaseContext(),br.android.olhai.Preferencias.class);
+				 
+				 startActivity(settingsActivity);
+				break;
 			case R.id.menuSobre:
 				Dialog dialog = new Dialog(MainActivity.this);
 				
                 dialog.setContentView(R.layout.menu_sobre);
-                dialog.setTitle("Olhai! RU");
+                dialog.setTitle("Sobre");
                 dialog.setCancelable(true);
                 
-                dialog.show();
+                dialog.show();                
 				break;
 			default:
+				Log.e("Erro", "Nenhuma opção selecionada no Menu Principal");
 				break;
 		}
-		if (universidadeSelecionada == escolha) {
-			return true;
-		}
-		carregarCardapio();
+		//if (universidadeSelecionada == escolha) {
+		//	return true;
+		//}
+		//carregarCardapio();
 		return true;
 	};
 

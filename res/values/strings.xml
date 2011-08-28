@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Olhai! RU</string>    
     <string name="menuSobreAutor_1">Marcos Antônio</string>
     <string name="menuSobreAutor_2">Thiago Nascimento</string>
     <string name="menuSobreAutor_3">Yuri Adams</string>
     <string name="versaoDoAplicativo">0.4</string>
+    
+    <string-array name="universidadesParticipantes" >
+    	 <item>UECE</item>
+    </string-array>
 </resources>
