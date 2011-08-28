@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="Geral">
+                <CheckBoxPreference
+                        android:title="Cardápio Automático"
+                        android:defaultValue="true"
+                        android:summary="Atualiza cardápio automaticamente"
+                        android:key="cardapioAutomaticoCheckBox"
+                />
+                <ListPreference
+                 		android:key="universidadesParticipantesListPreference"
+                        android:defaultValue="0"
+                        android:entryValues="@array/universidadesParticipantes_id" 
+                        android:entries="@array/universidadesParticipantes_descricao" 
+                        android:title="Universidade" 
+                        android:summary="Selecione a universidade que deseja acompanhar o cardápio"
+                />                        
+        </PreferenceCategory>        
+        
+</PreferenceScreen>

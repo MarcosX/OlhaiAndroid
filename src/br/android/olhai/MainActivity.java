@@ -2,22 +2,17 @@ package br.android.olhai;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
-
-
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-
 import android.content.Intent;
-
+import android.content.SharedPreferences;
 import android.app.ProgressDialog;
-
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -31,17 +26,20 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.DialogInterface;
+
 
 import br.android.olhai.util.ArquivoUtil;
 
-
 public class MainActivity extends Activity implements OnTouchListener {
+	private SharedPreferences preferences;
+	
 	CardapioSemana cardapioDaSemana;
 	ArrayList<String> dscPratoDoDia;
 	ArrayList<String> detalhesPrato;
 	ArrayAdapter<String> adaptadorCardapio;
 	int diaDaSemana = 0;
-	int universidadeSelecionada = 0;
+	int universidadeSelecionada = 1;
 	private float downEventX;
 	private static final int UECE = 1;
 	private static final int NENHUMA_UNIVERSIDADE = 0;
@@ -56,6 +54,12 @@ public class MainActivity extends Activity implements OnTouchListener {
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
 				(OnTouchListener) this);
 
+		// Get the xml/preferences.xml preferences
+		this.preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		
+		
+		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
+		
 		arquivoUtil = new ArquivoUtil(this);
 
 		cardapioDaSemana = new CardapioSemana();
@@ -63,13 +67,67 @@ public class MainActivity extends Activity implements OnTouchListener {
 		detalhesPrato = new ArrayList<String>();
 		setAdapters();
 		setOnClick();
-		if (arquivoUtil.carregarIdUniversidade() != -1) {
+		
+		/*if (arquivoUtil.carregarIdUniversidade() != -1) {
 			carregarCardapio();
 		} else {
 			Toast.makeText(this, "ESCOLHER UNIVERSIDADE", Toast.LENGTH_SHORT)
 					.show();
 		}
-
+		*/
+		
+		if (idUniversidadeSelecionada == 0) {			
+			executandoPelaPrimeiraVez();
+		}else{
+			/*Carrega as informações salvas as preferencias e carrega o cardápio*/
+		}
+		
+	}
+	
+	/**
+	 * Método responsável por exibir a primeira configuração do usuário onde
+	 * ele irá escolher qual universidade ele deseja seguir;
+	 * @author thiagodnf
+	 */
+	private void executandoPelaPrimeiraVez()
+	{
+		final String items[] =  getResources().getStringArray(R.array.universidadesParticipantes_descricao);
+		
+		AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);
+		ab.setTitle("Universidade");
+		
+		/*Callback executado SOMENTE quando o usuário clica em algum elemento da lista*/
+		ab.setSingleChoiceItems(items, 0,new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int itemSelecionado) {				
+				MainActivity.this.universidadeSelecionada = itemSelecionado+1;				
+			}
+		});		
+		
+		ab.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				/*Salva a escolha nas preferências*/
+				SharedPreferences.Editor editor = MainActivity.this.preferences.edit();
+				String idUniversidade = String.valueOf(MainActivity.this.universidadeSelecionada);
+				editor.putString("universidadesParticipantesListPreference", idUniversidade);
+				
+				editor.commit();			
+			}
+		});
+		
+		ab.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {				
+				MainActivity.this.finish();
+			}
+		});	
+		
+		/*Quando o usuário clica no botão voltar*/
+		ab.setOnCancelListener(new DialogInterface.OnCancelListener(){
+			public void onCancel (DialogInterface dialog){
+				MainActivity.this.finish();
+			}
+		});
+				
+		ab.show();
 	}
 
 	/*
@@ -110,7 +168,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 			case R.id.menuConfiguracoes:
 				
 				Intent settingsActivity = 
-					 new Intent(getBaseContext(),br.android.olhai.Preferencias.class);
+					 new Intent(getBaseContext(),br.android.olhai.Preferences.class);
 				 
 				 startActivity(settingsActivity);
 				break;
@@ -133,6 +191,36 @@ public class MainActivity extends Activity implements OnTouchListener {
 		//carregarCardapio();
 		return true;
 	};
+	
+	
+	/**
+	 * Verifica se o usuário deixou a sincronização automática
+	 * @author thiagodnf	 
+	 * @return Verdadeiro caso o checkbox esteja ativa. Falso, otherwise  
+	 */
+	private boolean isCardapioAutomatico()
+	{		
+		if(this.preferences != null)
+		{
+			return this.preferences.getBoolean("cardapioAutomaticoCheckBox", true);
+		}
+		
+		return false;
+ 	}
+	
+	/** Retorna o id da Universidade Selecionada 
+	 * @return Retorna 0 Caso não tenha sido selecionado, e retorna o Id caso tenha sido selecionado
+	 * @author thiagodnf	 * 
+	 */
+	private int getIdUniversidadeSelecionada()
+	{
+		if(this.preferences != null)
+		{
+			String idUniversidade = this.preferences.getString("universidadesParticipantesListPreference", "0"); 
+			return Integer.parseInt(idUniversidade);
+		}
+		return 0;
+	}
 
 	/*
 	 * Atribui os metodos de chamada aos botões

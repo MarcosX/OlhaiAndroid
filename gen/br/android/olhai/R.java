@@ -9,7 +9,8 @@ package br.android.olhai;
 
 public final class R {
     public static final class array {
-        public static final int universidadesParticipantes=0x7f060000;
+        public static final int universidadesParticipantes_descricao=0x7f060001;
+        public static final int universidadesParticipantes_id=0x7f060000;
     }
     public static final class attr {
     }
@@ -53,6 +54,6 @@ public final class R {
         public static final int versaoDoAplicativo=0x7f050005;
     }
     public static final class xml {
-        public static final int preferencias=0x7f040000;
+        public static final int preferences=0x7f040000;
     }
 }

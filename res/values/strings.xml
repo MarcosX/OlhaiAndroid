@@ -8,7 +8,12 @@
     <string name="menuSobreAutor_3">Yuri Adams</string>
     <string name="versaoDoAplicativo">0.4</string>
     
-    <string-array name="universidadesParticipantes" >
-    	 <item>UECE</item>
+    <string-array name="universidadesParticipantes_id" >
+    	 <item >1</item>
+    	 <item >2</item>
+    </string-array>
+    <string-array name="universidadesParticipantes_descricao" >
+    	 <item >UECE</item>
+    	 <item >UFC</item>
     </string-array>
 </resources>

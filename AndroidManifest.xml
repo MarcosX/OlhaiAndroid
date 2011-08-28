@@ -13,7 +13,7 @@
 		</activity>
 		
 		<activity
-		        android:name=".Preferencias"
+		        android:name=".Preferences"
 		        android:label="teste">
 		</activity>
 	</application>
