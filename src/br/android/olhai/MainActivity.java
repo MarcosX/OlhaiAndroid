@@ -32,6 +32,19 @@ public class MainActivity extends Activity implements OnTouchListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		setOnTouchListeners();
+		// Get the xml/preferences.xml preferences
+		this.preferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
+		cardapioDaSemana = new CardapioSemana();
+		mostrarData();
+		if (idUniversidadeSelecionada == 0) {
+			executandoPelaPrimeiraVez();
+		}
+	}
+
+	private void setOnTouchListeners() {
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
 				(OnTouchListener) this);
 		findViewById(R.id.cardapioSegunda).setOnTouchListener(
@@ -44,15 +57,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 				(OnTouchListener) this);
 		findViewById(R.id.cardapioSexta).setOnTouchListener(
 				(OnTouchListener) this);
-		// Get the xml/preferences.xml preferences
-		this.preferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
-		cardapioDaSemana = new CardapioSemana();
-		mostrarData();
-		if (idUniversidadeSelecionada == 0) {
-			executandoPelaPrimeiraVez();
-		}
 	}
 
 	@Override

@@ -6,10 +6,14 @@ Desenvolvedores:
 	Thiago Nascimento
 	Yuri Adams
 	
-Versão 0.4
-	- Listando apenas o nome do prato
+Versão 0.5
+	- Swipe para esquerda e direita
 	- Detalhes do prato ao clicar
-	- Swipe para esquerda e direita	
+	- Logo do aplicativo
+	- Menu de preferências
+
+Versão 0.4
+	- Listando apenas o nome do prato	
 
 Versão 0.3
 	- Lista de cardápios para a semana toda

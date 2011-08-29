@@ -14,14 +14,16 @@ public class CardapioSemana {
 	private static final int DIAS_DA_SEMANA = 5;
 	public ArrayList<CardapioDia> cardapio;
 
-	public void carregarDeArquivo() throws ClientProtocolException,
-			JSONException, IOException {
+	public CardapioSemana() {
 		cardapio = new ArrayList<CardapioDia>();
 		for (int i = 0; i < DIAS_DA_SEMANA; i++) {
 			cardapio.add(new CardapioDia());
 		}
-		limparCardapio();
+	}
 
+	public void carregarDeArquivo() throws ClientProtocolException,
+			JSONException, IOException {
+		limparCardapio();
 		Sincronizer sincronizer = new Sincronizer();
 		JSONObject jsonObject = (JSONObject) new JSONTokener(
 				sincronizer.getJSONFromAplication()).nextValue();
