@@ -26,8 +26,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	int diaDaSemana = 0;
 	int universidadeSelecionada = 1;
 	private float downEventX;
-	private static final int UECE = 1;
-	private static final int NENHUMA_UNIVERSIDADE = 0;
 	private static final float ESPAÇO_DE_ARRASTE = 20;
 
 	@Override
@@ -55,8 +53,13 @@ public class MainActivity extends Activity implements OnTouchListener {
 		if (idUniversidadeSelecionada == 0) {
 			executandoPelaPrimeiraVez();
 		}
+	}
+
+	@Override
+	protected void onResume() {
 		requistarCardapio();
 		setAdapters();
+		super.onResume();
 	}
 
 	/**
@@ -123,12 +126,11 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 	@Override
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
-		// int escolha = universidadeSelecionada;
 		switch (item.getItemId()) {
 		case R.id.menuConfiguracoes:
 
 			Intent settingsActivity = new Intent(getBaseContext(),
-					br.android.olhai.Preferences.class);
+					Preferences.class);
 
 			startActivity(settingsActivity);
 			break;
@@ -223,16 +225,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 	private void requistarCardapio() {
 		try {
-			switch (universidadeSelecionada) {
-			case UECE:
-				cardapioDaSemana.carregarDeArquivo("UECE");
-				break;
-			case NENHUMA_UNIVERSIDADE:
-				cardapioDaSemana.carregarDeArquivo(null);
-				break;
-			default:
-				break;
-			}
+			cardapioDaSemana.carregarDeArquivo();
 		} catch (Exception e) {
 			Log.i("JSON", e.getMessage());
 		}
