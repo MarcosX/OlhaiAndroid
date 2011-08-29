@@ -17,16 +17,18 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements OnTouchListener {
+	private static final int ESPACO_DE_ARRASTE = 30;
+
 	private SharedPreferences preferences;
 
 	CardapioSemana cardapioDaSemana;
 	int diaDaSemana = 0;
 	int universidadeSelecionada = 1;
-	private float downEventX;
-	private static final float ESPAÇO_DE_ARRASTE = 20;
+	private float downEventX, downEventY;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -239,10 +241,15 @@ public class MainActivity extends Activity implements OnTouchListener {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			downEventX = event.getX();
+			downEventY = event.getY();
 			break;
 		case MotionEvent.ACTION_UP:
+			float upEventY = event.getY();
+			if (Math.abs(downEventY - upEventY) > ESPACO_DE_ARRASTE) {
+				return false;
+			}
 			float upEventX = event.getX();
-			if (downEventX - ESPAÇO_DE_ARRASTE > upEventX) {
+			if (downEventX - ESPACO_DE_ARRASTE > upEventX) {
 				if (diaDaSemana < 4) {
 					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
 					vf.setInAnimation(inFromRightAnimation());
@@ -250,7 +257,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 					vf.showNext();
 					diaDaSemana++;
 				}
-			} else if (downEventX + ESPAÇO_DE_ARRASTE < upEventX) {
+			} else if (downEventX + ESPACO_DE_ARRASTE < upEventX) {
 				if (diaDaSemana > 0) {
 					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
 					vf.setInAnimation(inFromLeftAnimation());
