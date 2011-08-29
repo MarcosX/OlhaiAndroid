@@ -9,24 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-/*
- * A classe CardapioSemana agrega cinco cardapios, um para cada dia da semana. As informações
- * dos cardápios de cada dia são obtidas através de um arquivo.
- */
 public class CardapioSemana {
 
 	private static final int DIAS_DA_SEMANA = 5;
-	/*
-	 * Conjunto de cardapios de um dia
-	 */
 	public ArrayList<CardapioDia> cardapio;
 
-	/*
-	 * Lê as informações do cardápio de um arquivo e insere na lista de
-	 * cardápios
-	 * 
-	 * @param nomeDoArquivo nome do arquivo com os dados
-	 */
 	public void carregarDeArquivo(String nomeDoArquivo)
 			throws ClientProtocolException, JSONException, IOException {
 		cardapio = new ArrayList<CardapioDia>();
@@ -54,28 +41,18 @@ public class CardapioSemana {
 		}
 	}
 
-	/*
-	 * Limpa o conteúdo dos cinco cardápios
-	 */
-
 	private void limparCardapio() {
 		for (CardapioDia cardapioTmp : cardapio) {
 			cardapioTmp.limparCardapio();
 		}
 	}
 
-	/*
-	 * @return descrição do cardápio de um dia
-	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getDscNomePrato(int diaDaSemana) {
 		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscNomePrato()
 				.clone();
 	}
 
-	/*
-	 * @return descrição do cardápio de um dia
-	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getDetalhesPrato(int diaDaSemana) {
 		return (ArrayList<String>) cardapio.get(diaDaSemana).getDetalhesPrato()

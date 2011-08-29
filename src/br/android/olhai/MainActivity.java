@@ -2,16 +2,18 @@ package br.android.olhai;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -26,9 +28,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.DialogInterface;
-
-
 import br.android.olhai.util.ArquivoUtil;
 
 public class MainActivity extends Activity implements OnTouchListener {
@@ -45,8 +44,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private static final int NENHUMA_UNIVERSIDADE = 0;
 	private ArquivoUtil arquivoUtil;
 
-
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -130,12 +127,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		ab.show();
 	}
 
-	/*
-	 * Override para adicionar o menu de configurações
-	 * 
-	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu,
-	 * android.view.View, android.view.ContextMenu.ContextMenuInfo)
-	 */
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -143,13 +134,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		return true;
 	};
 
-	/*
-	 * Override para adicionar os eventos de seleção de universidade Atribui a
-	 * universidade seleciona e recarrega o cardápio apenas se a universidade
-	 * selecionada mudar
-	 * 
-	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-	 */
 	@Override
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		//int escolha = universidadeSelecionada;
@@ -222,9 +206,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		return 0;
 	}
 
-	/*
-	 * Atribui os metodos de chamada aos botões
-	 */
 	private void setOnClick() {
 		((Button) findViewById(R.id.btnOntem))
 				.setOnClickListener(new OnClickListener() {
@@ -260,10 +241,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 				});
 	}
 
-	/*
-	 * Cria os adapters e atribui para a ListView do cardápio e o Spinner de
-	 * escolha da Universidade
-	 */
 	private void setAdapters() {
 		adaptadorCardapio = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, dscPratoDoDia);
@@ -271,13 +248,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 				.setAdapter(adaptadorCardapio);
 	}
 
-	/*
-	 * Altera o dia da semana que está sendo visualizado
-	 * 
-	 * @param isAmanha boolean que indica se o dia deve ser incrementado, caso o
-	 * botão clicado seja amanhã, ou decrementado, caso o botão clicado seja
-	 * ontem
-	 */
 	private void alterarData(boolean isAmanha) {
 		if (isAmanha == true) {
 			if (diaDaSemana == 4)
@@ -290,11 +260,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		}
 	}
 
-	/*
-	 * altera a descrição do cardápio para o dia da semana de acordo com a
-	 * variável diaDaSemana e notifica o adaptador da ListView que o conjunto de
-	 * dados mudou
-	 */
 	private void exibirCardapio() {
 		dscPratoDoDia.clear();
 		detalhesPrato.clear();
@@ -309,10 +274,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		mostrarData();
 	}
 
-	/*
-	 * Altera o dia na interface de acordo com a variável diaDaSemana. Modifica
-	 * o texto do topo da aplicação e os botões de ontem e amanhã
-	 */
 	private void mostrarData() {
 		TextView dia = ((TextView) findViewById(R.id.textViewHoje));
 		Button ontem = ((Button) findViewById(R.id.btnOntem));
@@ -352,10 +313,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		}
 	}
 
-	/*
-	 * Carrega o cardapio da semana de acordo com a universidade selecionada no
-	 * menu de configurações
-	 */
 	private void carregarCardapio() {
 		final ProgressDialog progress = ProgressDialog.show(this, "Aguarde...",
 				"Carregando Cardapio..", true);
