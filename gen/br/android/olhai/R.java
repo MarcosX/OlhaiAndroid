@@ -18,16 +18,17 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int autor1TextView=0x7f080007;
-        public static final int btnAmanha=0x7f080004;
-        public static final int btnOntem=0x7f080002;
+        public static final int autor1TextView=0x7f080008;
+        public static final int cardapioQuarta=0x7f080005;
+        public static final int cardapioQuinta=0x7f080006;
+        public static final int cardapioSegunda=0x7f080003;
+        public static final int cardapioSexta=0x7f080007;
+        public static final int cardapioTerca=0x7f080004;
         public static final int layoutGlobal=0x7f080000;
-        public static final int linearLayout1=0x7f080001;
-        public static final int listCardapio=0x7f080006;
-        public static final int menuConfiguracoes=0x7f080008;
-        public static final int menuSobre=0x7f080009;
-        public static final int textViewHoje=0x7f080003;
-        public static final int textViewUniversidadeEstatico=0x7f080005;
+        public static final int menuConfiguracoes=0x7f080009;
+        public static final int menuSobre=0x7f08000a;
+        public static final int textViewHoje=0x7f080001;
+        public static final int viewFlipperCardapio=0x7f080002;
     }
     public static final class layout {
         public static final int main=0x7f030000;

@@ -1,49 +1,34 @@
 package br.android.olhai;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
-import br.android.olhai.util.ArquivoUtil;
+import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements OnTouchListener {
 	private SharedPreferences preferences;
 
 	CardapioSemana cardapioDaSemana;
-	ArrayList<String> dscPratoDoDia;
-	ArrayList<String> detalhesPrato;
-	ArrayAdapter<String> adaptadorCardapio;
 	int diaDaSemana = 0;
 	int universidadeSelecionada = 1;
 	private float downEventX;
 	private static final int UECE = 1;
 	private static final int NENHUMA_UNIVERSIDADE = 0;
-	private ArquivoUtil arquivoUtil;
+	private static final float ESPAÇO_DE_ARRASTE = 20;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,26 +36,27 @@ public class MainActivity extends Activity implements OnTouchListener {
 		setContentView(R.layout.main);
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
 				(OnTouchListener) this);
-
+		findViewById(R.id.cardapioSegunda).setOnTouchListener(
+				(OnTouchListener) this);
+		findViewById(R.id.cardapioTerca).setOnTouchListener(
+				(OnTouchListener) this);
+		findViewById(R.id.cardapioQuarta).setOnTouchListener(
+				(OnTouchListener) this);
+		findViewById(R.id.cardapioQuinta).setOnTouchListener(
+				(OnTouchListener) this);
+		findViewById(R.id.cardapioSexta).setOnTouchListener(
+				(OnTouchListener) this);
 		// Get the xml/preferences.xml preferences
 		this.preferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-
 		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
-
-		arquivoUtil = new ArquivoUtil(this);
-
 		cardapioDaSemana = new CardapioSemana();
-		dscPratoDoDia = new ArrayList<String>();
-		detalhesPrato = new ArrayList<String>();
-		setAdapters();
-		setOnClick();
-
+		mostrarData();
 		if (idUniversidadeSelecionada == 0) {
 			executandoPelaPrimeiraVez();
 		}
 		requistarCardapio();
-
+		setAdapters();
 	}
 
 	/**
@@ -139,14 +125,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		// int escolha = universidadeSelecionada;
 		switch (item.getItemId()) {
-		/*
-		 * case R.id.opcaoUece: universidadeSelecionada = UECE; ((TextView)
-		 * findViewById(R.id.textViewUniversidadeEstatico))
-		 * .setText("Visualizando cardápio de UECE"); break; case
-		 * R.id.opcaoNenhuma: universidadeSelecionada = NENHUMA_UNIVERSIDADE;
-		 * ((TextView) findViewById(R.id.textViewUniversidadeEstatico))
-		 * .setText("Selecione a Universidade no menu Configurações"); break;
-		 */
 		case R.id.menuConfiguracoes:
 
 			Intent settingsActivity = new Intent(getBaseContext(),
@@ -176,6 +154,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	 * @author thiagodnf
 	 * @return Verdadeiro caso o checkbox esteja ativa. Falso, otherwise
 	 */
+	@SuppressWarnings("unused")
 	private boolean isCardapioAutomatico() {
 		if (this.preferences != null) {
 			return this.preferences.getBoolean("cardapioAutomaticoCheckBox",
@@ -201,104 +180,41 @@ public class MainActivity extends Activity implements OnTouchListener {
 		return 0;
 	}
 
-	private void setOnClick() {
-		((Button) findViewById(R.id.btnOntem))
-				.setOnClickListener(new OnClickListener() {
-
-					public void onClick(View v) {
-						alterarData(false);
-						exibirCardapio();
-					}
-				});
-		((Button) findViewById(R.id.btnAmanha))
-				.setOnClickListener(new OnClickListener() {
-
-					public void onClick(View v) {
-						alterarData(true);
-						exibirCardapio();
-					}
-				});
-		((ListView) findViewById(R.id.listCardapio))
-				.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						AlertDialog.Builder alert = new AlertDialog.Builder(
-								MainActivity.this);
-						alert.setTitle(dscPratoDoDia.get(arg2));
-						alert.setMessage(detalhesPrato.get(arg2));
-						alert.setNeutralButton("Voltar", null);
-						alert.show();
-					}
-				});
-	}
-
 	private void setAdapters() {
-		adaptadorCardapio = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, dscPratoDoDia);
-		((ListView) findViewById(R.id.listCardapio))
-				.setAdapter(adaptadorCardapio);
-	}
-
-	private void alterarData(boolean isAmanha) {
-		if (isAmanha == true) {
-			if (diaDaSemana == 4)
-				return;
-			diaDaSemana++;
-		} else {
-			if (diaDaSemana == 0)
-				return;
-			diaDaSemana--;
-		}
-	}
-
-	private void exibirCardapio() {
-		dscPratoDoDia.clear();
-		detalhesPrato.clear();
-		for (int i = 0; i < cardapioDaSemana.getDscNomePrato(diaDaSemana)
-				.size(); i++) {
-			dscPratoDoDia.add(cardapioDaSemana.getDscNomePrato(diaDaSemana)
-					.get(i));
-			detalhesPrato.add(cardapioDaSemana.getDetalhesPrato(diaDaSemana)
-					.get(i));
-		}
-		adaptadorCardapio.notifyDataSetChanged();
-		mostrarData();
+		((ListaCardapio) findViewById(R.id.cardapioSegunda))
+				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(0),
+						cardapioDaSemana.getDetalhesPrato(0));
+		((ListaCardapio) findViewById(R.id.cardapioTerca))
+				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(1),
+						cardapioDaSemana.getDetalhesPrato(1));
+		((ListaCardapio) findViewById(R.id.cardapioQuarta))
+				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(2),
+						cardapioDaSemana.getDetalhesPrato(2));
+		((ListaCardapio) findViewById(R.id.cardapioQuinta))
+				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(3),
+						cardapioDaSemana.getDetalhesPrato(3));
+		((ListaCardapio) findViewById(R.id.cardapioSexta))
+				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(4),
+						cardapioDaSemana.getDetalhesPrato(4));
 	}
 
 	private void mostrarData() {
 		TextView dia = ((TextView) findViewById(R.id.textViewHoje));
-		Button ontem = ((Button) findViewById(R.id.btnOntem));
-		Button amanha = ((Button) findViewById(R.id.btnAmanha));
 		switch (diaDaSemana) {
 		case 0:
 			dia.setText("Segunda-feira");
-			ontem.setEnabled(false);
-			ontem.setText("");
-			amanha.setText("Terça");
 			break;
 		case 1:
 			dia.setText("Terça-feira");
-			ontem.setEnabled(true);
-			ontem.setText("Segunda");
-			amanha.setText("Quarta");
 			break;
 		case 2:
 			dia.setText("Quarta-feira");
-			ontem.setText("Terça");
-			amanha.setText("Quinta");
 			break;
 		case 3:
 			dia.setText("Quinta-feira");
-			ontem.setText("Quarta");
-			amanha.setEnabled(true);
-			amanha.setText("Sexta");
 			break;
 		case 4:
 			dia.setText("Sexta-feira");
-			ontem.setText("Quinta");
-			amanha.setEnabled(false);
-			amanha.setText("");
 			break;
 		default:
 			break;
@@ -320,7 +236,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		} catch (Exception e) {
 			Log.i("JSON", e.getMessage());
 		}
-		exibirCardapio();
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -330,19 +245,76 @@ public class MainActivity extends Activity implements OnTouchListener {
 			break;
 		case MotionEvent.ACTION_UP:
 			float upEventX = event.getX();
-			if (downEventX > upEventX) {
-				if (diaDaSemana < 4)
+			if (downEventX - ESPAÇO_DE_ARRASTE > upEventX) {
+				if (diaDaSemana < 4) {
+					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
+					vf.setInAnimation(inFromRightAnimation());
+					vf.setOutAnimation(outToLeftAnimation());
+					vf.showNext();
 					diaDaSemana++;
-			} else if (downEventX < upEventX) {
-				if (diaDaSemana > 0)
+				}
+			} else if (downEventX + ESPAÇO_DE_ARRASTE < upEventX) {
+				if (diaDaSemana > 0) {
+					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
+					vf.setInAnimation(inFromLeftAnimation());
+					vf.setOutAnimation(outToRightAnimation());
+					vf.showPrevious();
 					diaDaSemana--;
+				}
+			} else {
+				return false;
 			}
-			exibirCardapio();
-			break;
+			mostrarData();
+			return true;
 
 		default:
 			break;
 		}
-		return true;
+		return false;
+	}
+
+	private Animation inFromRightAnimation() {
+
+		Animation inFromRight = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, +1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		inFromRight.setDuration(500);
+		inFromRight.setInterpolator(new AccelerateInterpolator());
+		return inFromRight;
+	}
+
+	private Animation outToLeftAnimation() {
+		Animation outtoLeft = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, -1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		outtoLeft.setDuration(500);
+		outtoLeft.setInterpolator(new AccelerateInterpolator());
+		return outtoLeft;
+	}
+
+	private Animation inFromLeftAnimation() {
+		Animation inFromLeft = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, -1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		inFromLeft.setDuration(500);
+		inFromLeft.setInterpolator(new AccelerateInterpolator());
+		return inFromLeft;
+	}
+
+	private Animation outToRightAnimation() {
+		Animation outtoRight = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, +1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		outtoRight.setDuration(500);
+		outtoRight.setInterpolator(new AccelerateInterpolator());
+		return outtoRight;
 	}
 }
