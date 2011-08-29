@@ -1,5 +1,11 @@
 package br.android.olhai;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.w3c.dom.Comment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,13 +23,20 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements OnTouchListener {
+
 	private static final int ESPACO_DE_ARRASTE_X = 30;
 	private static final int ESPACO_DE_ARRASTE_Y = 50;
 
 	private SharedPreferences preferences;
+
+	Animation inFromRight;
+	Animation outtoLeft;
+	Animation inFromLeft;
+	Animation outtoRight;
 
 	CardapioSemana cardapioDaSemana;
 	int diaDaSemana = 0;
@@ -44,6 +57,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		if (idUniversidadeSelecionada == 0) {
 			executandoPelaPrimeiraVez();
 		}
+		criarAnimações();
 	}
 
 	private void setOnTouchListeners() {
@@ -162,7 +176,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	 * @author thiagodnf
 	 * @return Verdadeiro caso o checkbox esteja ativa. Falso, otherwise
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings("Não utilizada ainda...")
 	private boolean isCardapioAutomatico() {
 		if (this.preferences != null) {
 			return this.preferences.getBoolean("cardapioAutomaticoCheckBox",
@@ -232,8 +246,16 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private void requistarCardapio() {
 		try {
 			cardapioDaSemana.carregarDeArquivo();
-		} catch (Exception e) {
-			Log.i("JSON", e.getMessage());
+		} catch (ClientProtocolException e) {
+			Log.e("JSON", "ClientProtocol: " + e.getMessage());
+		} catch (JSONException e) {
+			Log.e("JSON", "JSONException: " + e.getMessage());
+		} catch (IOException e) {
+			AlertDialog.Builder d = new AlertDialog.Builder(this);
+			d.setMessage("Não foi possível conectar a " + e.getMessage()
+					+ "\nVerifique a conexão com a Internet.");
+			d.show();
+			Log.e("JSON", "IOException: " + e.getMessage());
 		}
 	}
 
@@ -252,16 +274,16 @@ public class MainActivity extends Activity implements OnTouchListener {
 			if (downEventX - ESPACO_DE_ARRASTE_X > upEventX) {
 				if (diaDaSemana < 4) {
 					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-					vf.setInAnimation(inFromRightAnimation());
-					vf.setOutAnimation(outToLeftAnimation());
+					vf.setInAnimation(inFromRight);
+					vf.setOutAnimation(outtoLeft);
 					vf.showNext();
 					diaDaSemana++;
 				}
 			} else if (downEventX + ESPACO_DE_ARRASTE_X < upEventX) {
 				if (diaDaSemana > 0) {
 					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-					vf.setInAnimation(inFromLeftAnimation());
-					vf.setOutAnimation(outToRightAnimation());
+					vf.setInAnimation(inFromLeft);
+					vf.setOutAnimation(outtoRight);
 					vf.showPrevious();
 					diaDaSemana--;
 				}
@@ -277,48 +299,33 @@ public class MainActivity extends Activity implements OnTouchListener {
 		return false;
 	}
 
-	private Animation inFromRightAnimation() {
-
-		Animation inFromRight = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, +1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
+	private void criarAnimações() {
+		inFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+				+1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		inFromRight.setDuration(500);
 		inFromRight.setInterpolator(new AccelerateInterpolator());
-		return inFromRight;
-	}
 
-	private Animation outToLeftAnimation() {
-		Animation outtoLeft = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, 0.0f,
+		outtoLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, -1.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		outtoLeft.setDuration(500);
 		outtoLeft.setInterpolator(new AccelerateInterpolator());
-		return outtoLeft;
-	}
 
-	private Animation inFromLeftAnimation() {
-		Animation inFromLeft = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, -1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
+		inFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
+				-1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		inFromLeft.setDuration(500);
 		inFromLeft.setInterpolator(new AccelerateInterpolator());
-		return inFromLeft;
-	}
 
-	private Animation outToRightAnimation() {
-		Animation outtoRight = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, 0.0f,
+		outtoRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, +1.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		outtoRight.setDuration(500);
 		outtoRight.setInterpolator(new AccelerateInterpolator());
-		return outtoRight;
 	}
 }
