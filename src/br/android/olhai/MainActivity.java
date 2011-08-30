@@ -313,7 +313,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
 				.getInFromLeft());
 		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
-				.getInFromRight());
+				.getOutToRight());
 		cardapioViewFlipper.showPrevious();
 	}
 
@@ -321,7 +321,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
 				.getInFromRight());
 		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
-				.getOuttoLeft());
+				.getOutToLeft());
 		cardapioViewFlipper.showNext();
 	}
 
