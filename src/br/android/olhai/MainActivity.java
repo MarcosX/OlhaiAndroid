@@ -4,26 +4,23 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
-import org.w3c.dom.Comment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements OnTouchListener {
@@ -33,14 +30,16 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 	private SharedPreferences preferences;
 
-	Animation inFromRight;
-	Animation outtoLeft;
-	Animation inFromLeft;
-	Animation outtoRight;
+	private ViewFlipAnimation cardapioViewFlipperAnimations;
+	private ViewFlipper cardapioViewFlipper;
 
-	CardapioSemana cardapioDaSemana;
-	int diaDaSemana = 0;
-	int universidadeSelecionada = 1;
+	private CardapioSemana cardapioDaSemana;
+
+	private ProgressDialog dialogoDeRequisicaoJSON;
+	private Handler handlerDeRequisicaoJSON = new Handler();
+
+	private int diaDaSemana = 0;
+	private int universidadeSelecionada = 1;
 	private float downEventX, downEventY;
 
 	@Override
@@ -60,6 +59,31 @@ public class MainActivity extends Activity implements OnTouchListener {
 		criarAnimações();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// Ainda não utilizado
+		// dialogoDeRequisicaoJSON = ProgressDialog.show(this, "Atualizando",
+		// "Aguarde enquanto o aplicativo sincorniza as informações",
+		// true, false);
+		threadRequisitarCardapio();
+	}
+
+	private void threadRequisitarCardapio() {
+		requistarCardapio();
+		setAdapters();
+	}
+
+	@SuppressWarnings("unused")
+	private void atualizarTela() {
+		handlerDeRequisicaoJSON.post(new Runnable() {
+			@Override
+			public void run() {
+				dialogoDeRequisicaoJSON.dismiss();
+			}
+		});
+	};
+
 	private void setOnTouchListeners() {
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
 				(OnTouchListener) this);
@@ -73,13 +97,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 				(OnTouchListener) this);
 		findViewById(R.id.cardapioSexta).setOnTouchListener(
 				(OnTouchListener) this);
-	}
-
-	@Override
-	protected void onResume() {
-		requistarCardapio();
-		setAdapters();
-		super.onResume();
 	}
 
 	/**
@@ -176,7 +193,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	 * @author thiagodnf
 	 * @return Verdadeiro caso o checkbox esteja ativa. Falso, otherwise
 	 */
-	@SuppressWarnings("Não utilizada ainda...")
+	@SuppressWarnings("unused")
 	private boolean isCardapioAutomatico() {
 		if (this.preferences != null) {
 			return this.preferences.getBoolean("cardapioAutomaticoCheckBox",
@@ -252,8 +269,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 			Log.e("JSON", "JSONException: " + e.getMessage());
 		} catch (IOException e) {
 			AlertDialog.Builder d = new AlertDialog.Builder(this);
-			d.setMessage("Não foi possível conectar a " + e.getMessage()
-					+ "\nVerifique a conexão com a Internet.");
+			d.setMessage("Verifique a conexão com a Internet.");
 			d.show();
 			Log.e("JSON", "IOException: " + e.getMessage());
 		}
@@ -273,18 +289,12 @@ public class MainActivity extends Activity implements OnTouchListener {
 			float upEventX = event.getX();
 			if (downEventX - ESPACO_DE_ARRASTE_X > upEventX) {
 				if (diaDaSemana < 4) {
-					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-					vf.setInAnimation(inFromRight);
-					vf.setOutAnimation(outtoLeft);
-					vf.showNext();
+					flipDireitaParaEsquerda();
 					diaDaSemana++;
 				}
 			} else if (downEventX + ESPACO_DE_ARRASTE_X < upEventX) {
 				if (diaDaSemana > 0) {
-					ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-					vf.setInAnimation(inFromLeft);
-					vf.setOutAnimation(outtoRight);
-					vf.showPrevious();
+					flipEsquerdaParaDireita();
 					diaDaSemana--;
 				}
 			} else {
@@ -299,33 +309,24 @@ public class MainActivity extends Activity implements OnTouchListener {
 		return false;
 	}
 
+	private void flipEsquerdaParaDireita() {
+		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
+				.getInFromLeft());
+		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
+				.getInFromRight());
+		cardapioViewFlipper.showPrevious();
+	}
+
+	private void flipDireitaParaEsquerda() {
+		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
+				.getInFromRight());
+		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
+				.getOuttoLeft());
+		cardapioViewFlipper.showNext();
+	}
+
 	private void criarAnimações() {
-		inFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
-				+1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
-		inFromRight.setDuration(500);
-		inFromRight.setInterpolator(new AccelerateInterpolator());
-
-		outtoLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, -1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
-		outtoLeft.setDuration(500);
-		outtoLeft.setInterpolator(new AccelerateInterpolator());
-
-		inFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
-				-1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
-		inFromLeft.setDuration(500);
-		inFromLeft.setInterpolator(new AccelerateInterpolator());
-
-		outtoRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, +1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
-		outtoRight.setDuration(500);
-		outtoRight.setInterpolator(new AccelerateInterpolator());
+		cardapioViewFlipperAnimations = new ViewFlipAnimation();
+		cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
 	}
 }
