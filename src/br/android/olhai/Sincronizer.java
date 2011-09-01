@@ -1,6 +1,8 @@
 package br.android.olhai;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
@@ -11,27 +13,27 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class Sincronizer {
-	
-	
-	public String getJSONFromAplication(/*String idUniversidade,String data*/) throws ClientProtocolException, IOException{
-		String encode = "http://thiagonascimento.info/olhai/index.php/olhai/api?idUniversidade=1&data=2011-08-01";
-		//String url = "http://thiagonascimento.info/olhai/index.php/olhai/api?idUniversidade="; //idUniversidade + "&data=" + data;
-		//String url2 = "&data=";
+
+	private static final String enderecoApi = "http://thiagonascimento.info/olhai/index.php/olhai/api";
+
+	public String getJSONFromAplication(/* String data , String idUniversidade */)
+			throws ClientProtocolException, IOException {
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd");
+		String encode = enderecoApi + "?idUniversidade=1&data="
+				+ format.format(new Date());
 		HttpClient httpClient = new DefaultHttpClient();
-		//String encode = url + URLEncoder.encode(idUniversidade) + url2 + URLEncoder.encode(data);
 		HttpGet httpGet = new HttpGet(encode);
 		HttpResponse response;
 		StringBuffer sb = new StringBuffer();
 		response = httpClient.execute(httpGet);
 		HttpEntity entity = response.getEntity();
-		if(entity != null){
+		if (entity != null) {
 			Scanner s = new Scanner(entity.getContent());
 			s.useDelimiter(",");
-			while(s.hasNext()){
+			while (s.hasNext()) {
 				sb.append(s.next()).append(",");
 			}
 		}
-		
 		return sb.toString();
 	}
 }

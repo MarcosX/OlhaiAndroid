@@ -6,11 +6,13 @@ public class CardapioDia {
 	private ArrayList<ItemCardapio> cardapio;
 	private ArrayList<String> dscNomePrato;
 	private ArrayList<String> dscTipoPrato;
+	private String data;
 
 	public CardapioDia() {
 		cardapio = new ArrayList<ItemCardapio>();
 		dscNomePrato = new ArrayList<String>();
 		dscTipoPrato = new ArrayList<String>();
+		data = new String();
 	}
 
 	public void inserirItem(ItemCardapio itemCardapio) {
@@ -32,5 +34,13 @@ public class CardapioDia {
 		cardapio.clear();
 		dscNomePrato.clear();
 		dscTipoPrato.clear();
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	public String getDataFormatada() {
+		return data;
 	}
 }

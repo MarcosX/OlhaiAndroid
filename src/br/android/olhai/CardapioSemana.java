@@ -32,6 +32,7 @@ public class CardapioSemana {
 		for (int j = 0; j < 5; j++) {
 			JSONObject jsonCardapioDoDia = jsonObject
 					.getJSONObject(diasDaSemana[j]);
+			cardapio.get(j).setData(jsonCardapioDoDia.getString("data"));
 			JSONArray jsonArray = jsonCardapioDoDia.getJSONArray("itens");
 			for (int i = 0; i < jsonArray.length(); i++) {
 				cardapio.get(j).inserirItem(
@@ -56,6 +57,10 @@ public class CardapioSemana {
 	public ArrayList<String> getDetalhesPrato(int diaDaSemana) {
 		return (ArrayList<String>) cardapio.get(diaDaSemana).getDetalhesPrato()
 				.clone();
+	}
+
+	public String getDataFormatada(int diaDaSemana) {
+		return cardapio.get(diaDaSemana).getDataFormatada();
 	}
 
 }

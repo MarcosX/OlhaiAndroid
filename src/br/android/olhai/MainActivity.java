@@ -52,7 +52,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 				.getDefaultSharedPreferences(getBaseContext());
 		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
 		cardapioDaSemana = new CardapioSemana();
-		mostrarData();
 		if (idUniversidadeSelecionada == 0) {
 			executandoPelaPrimeiraVez();
 		}
@@ -72,6 +71,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private void threadRequisitarCardapio() {
 		requistarCardapio();
 		setAdapters();
+		mostrarData();
 	}
 
 	@SuppressWarnings("unused")
@@ -258,6 +258,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 		default:
 			break;
 		}
+		dia.setText(dia.getText() + " "
+				+ cardapioDaSemana.getDataFormatada(diaDaSemana));
 	}
 
 	private void requistarCardapio() {
