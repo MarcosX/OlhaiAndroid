@@ -29,6 +29,11 @@ public class CardapioSemana {
 				sincronizer.getJSONFromAplication()).nextValue();
 		String[] diasDaSemana = { "segunda", "terca", "quarta", "quinta",
 				"sexta" };
+		inserirDadosDoJSON(jsonObject, diasDaSemana);
+	}
+
+	private void inserirDadosDoJSON(JSONObject jsonObject, String[] diasDaSemana)
+			throws JSONException {
 		for (int j = 0; j < 5; j++) {
 			JSONObject jsonCardapioDoDia = jsonObject
 					.getJSONObject(diasDaSemana[j]);

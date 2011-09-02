@@ -18,15 +18,8 @@ public class Sincronizer {
 
 	public String getJSONFromAplication(/* String data , String idUniversidade */)
 			throws ClientProtocolException, IOException {
-		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd");
-		String encode = enderecoApi + "?idUniversidade=1&data="
-				+ format.format(new Date());
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(encode);
-		HttpResponse response;
+		HttpEntity entity = conectarHttpEntity();
 		StringBuffer sb = new StringBuffer();
-		response = httpClient.execute(httpGet);
-		HttpEntity entity = response.getEntity();
 		if (entity != null) {
 			Scanner s = new Scanner(entity.getContent());
 			s.useDelimiter(",");
@@ -35,5 +28,18 @@ public class Sincronizer {
 			}
 		}
 		return sb.toString();
+	}
+
+	private HttpEntity conectarHttpEntity() throws IOException,
+			ClientProtocolException {
+		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd");
+		String encode = enderecoApi + "?idUniversidade=1&data="
+				+ format.format(new Date());
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(encode);
+		HttpResponse response;
+		response = httpClient.execute(httpGet);
+		HttpEntity entity = response.getEntity();
+		return entity;
 	}
 }
