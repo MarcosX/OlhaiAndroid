@@ -49,16 +49,12 @@ public class CardapioSemana {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<String> getDscNomePrato(int diaDaSemana) {
-		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscNomePrato()
-				.clone();
+		return (ArrayList<String>) cardapio.get(diaDaSemana).getDscNomePrato();
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<String> getDetalhesPrato(int diaDaSemana) {
-		return (ArrayList<String>) cardapio.get(diaDaSemana).getDetalhesPrato()
-				.clone();
+		return (ArrayList<String>) cardapio.get(diaDaSemana).getDetalhesPrato();
 	}
 
 	public String getDataFormatada(int diaDaSemana) {

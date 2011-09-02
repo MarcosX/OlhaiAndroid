@@ -8,12 +8,10 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -25,17 +23,16 @@ import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements OnTouchListener {
 
+	private static final int NENHUMA_UNIVERSIDADE_SELECIONADA = 0;
 	private static final int ESPACO_DE_ARRASTE_X = 30;
 	private static final int ESPACO_DE_ARRASTE_Y = 50;
 
 	private SharedPreferences preferences;
 	private CardapioSemana cardapioDaSemana;
 
-	private ProgressDialog dialogoDeRequisicaoJSON;
-	private Handler handlerDeRequisicaoJSON = new Handler();
-
 	private int diaDaSemana = 0;
-	private int universidadeSelecionada = 1;
+	private int universidadeSelecionada;
+
 	private float downEventX, downEventY;
 
 	@Override
@@ -43,38 +40,29 @@ public class MainActivity extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		setOnTouchListeners();
+		cardapioDaSemana = new CardapioSemana();
 
 		// Get the xml/preferences.xml preferences
 		this.preferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-		int idUniversidadeSelecionada = getIdUniversidadeSelecionada();
-		cardapioDaSemana = new CardapioSemana();
-		if (idUniversidadeSelecionada == 0) {
-			executandoPelaPrimeiraVez();
-		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		threadRequisitarCardapio();
+		universidadeSelecionada = getIdUniversidadeSelecionada();
+		if (universidadeSelecionada == NENHUMA_UNIVERSIDADE_SELECIONADA) {
+			executandoPelaPrimeiraVez();
+		} else {
+			exibirCardapioEDatas();
+		}
 	}
 
-	private void threadRequisitarCardapio() {
+	private void exibirCardapioEDatas() {
 		requistarCardapio();
 		setAdapters();
 		mostrarData();
 	}
-
-	@SuppressWarnings("unused")
-	private void atualizarTela() {
-		handlerDeRequisicaoJSON.post(new Runnable() {
-			@Override
-			public void run() {
-				dialogoDeRequisicaoJSON.dismiss();
-			}
-		});
-	};
 
 	private void setOnTouchListeners() {
 		findViewById(R.id.layoutGlobal).setOnTouchListener(
@@ -125,8 +113,9 @@ public class MainActivity extends Activity implements OnTouchListener {
 						.valueOf(MainActivity.this.universidadeSelecionada);
 				editor.putString("universidadesParticipantesListPreference",
 						idUniversidade);
-
 				editor.commit();
+
+				exibirCardapioEDatas();
 			}
 		});
 
