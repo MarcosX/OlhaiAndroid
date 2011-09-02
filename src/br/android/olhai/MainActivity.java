@@ -61,10 +61,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// Ainda não utilizado
-		// dialogoDeRequisicaoJSON = ProgressDialog.show(this, "Atualizando",
-		// "Aguarde enquanto o aplicativo sincorniza as informações",
-		// true, false);
 		threadRequisitarCardapio();
 	}
 
@@ -238,28 +234,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 
 	private void mostrarData() {
-		TextView dia = ((TextView) findViewById(R.id.textViewHoje));
-		switch (diaDaSemana) {
-		case 0:
-			dia.setText("Segunda-feira");
-			break;
-		case 1:
-			dia.setText("Terça-feira");
-			break;
-		case 2:
-			dia.setText("Quarta-feira");
-			break;
-		case 3:
-			dia.setText("Quinta-feira");
-			break;
-		case 4:
-			dia.setText("Sexta-feira");
-			break;
-		default:
-			break;
-		}
-		dia.setText(dia.getText() + " "
-				+ cardapioDaSemana.getDataFormatada(diaDaSemana));
+		((TextView) findViewById(R.id.textViewHoje)).setText(cardapioDaSemana
+				.getDataFormatada(diaDaSemana));
 	}
 
 	private void requistarCardapio() {

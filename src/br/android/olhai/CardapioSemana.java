@@ -32,7 +32,9 @@ public class CardapioSemana {
 		for (int j = 0; j < 5; j++) {
 			JSONObject jsonCardapioDoDia = jsonObject
 					.getJSONObject(diasDaSemana[j]);
-			cardapio.get(j).setData(jsonCardapioDoDia.getString("data"));
+			cardapio.get(j).setData(
+					diasDaSemana[j] + "-feira "
+							+ jsonCardapioDoDia.getString("data"));
 			JSONArray jsonArray = jsonCardapioDoDia.getJSONArray("itens");
 			for (int i = 0; i < jsonArray.length(); i++) {
 				cardapio.get(j).inserirItem(
