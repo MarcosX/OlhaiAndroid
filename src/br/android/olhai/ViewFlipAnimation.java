@@ -6,12 +6,14 @@ import android.view.animation.TranslateAnimation;
 
 public class ViewFlipAnimation {
 
-	Animation inFromLeft;
-	Animation outToRight;
-	Animation inFromRight;
-	Animation outToLeft;
+	private static ViewFlipAnimation thisInstance = new ViewFlipAnimation();
+	private Animation inFromLeft;
+	private Animation outToRight;
+	private Animation inFromRight;
+	private Animation outToLeft;
 
-	public ViewFlipAnimation() {
+	// Construtor privado pq usa o padrão singleton
+	private ViewFlipAnimation() {
 		inFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT,
 				-1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f,
@@ -39,6 +41,10 @@ public class ViewFlipAnimation {
 				Animation.RELATIVE_TO_PARENT, 0.0f);
 		outToLeft.setDuration(500);
 		outToLeft.setInterpolator(new AccelerateInterpolator());
+	}
+
+	public static ViewFlipAnimation getInstance() {
+		return thisInstance;
 	}
 
 	public Animation getInFromLeft() {

@@ -29,10 +29,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private static final int ESPACO_DE_ARRASTE_Y = 50;
 
 	private SharedPreferences preferences;
-
-	private ViewFlipAnimation cardapioViewFlipperAnimations;
-	private ViewFlipper cardapioViewFlipper;
-
 	private CardapioSemana cardapioDaSemana;
 
 	private ProgressDialog dialogoDeRequisicaoJSON;
@@ -47,6 +43,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		setOnTouchListeners();
+
 		// Get the xml/preferences.xml preferences
 		this.preferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
@@ -55,7 +52,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 		if (idUniversidadeSelecionada == 0) {
 			executandoPelaPrimeiraVez();
 		}
-		criarAnimações();
 	}
 
 	@Override
@@ -288,23 +284,21 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 
 	private void flipEsquerdaParaDireita() {
-		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
+		ViewFlipper cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
+		cardapioViewFlipper.setInAnimation(ViewFlipAnimation.getInstance()
 				.getInFromLeft());
-		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
+		cardapioViewFlipper.setOutAnimation(ViewFlipAnimation.getInstance()
 				.getOutToRight());
 		cardapioViewFlipper.showPrevious();
 	}
 
 	private void flipDireitaParaEsquerda() {
-		cardapioViewFlipper.setInAnimation(cardapioViewFlipperAnimations
+		ViewFlipper cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
+		cardapioViewFlipper.setInAnimation(ViewFlipAnimation.getInstance()
 				.getInFromRight());
-		cardapioViewFlipper.setOutAnimation(cardapioViewFlipperAnimations
+		cardapioViewFlipper.setOutAnimation(ViewFlipAnimation.getInstance()
 				.getOutToLeft());
 		cardapioViewFlipper.showNext();
-	}
 
-	private void criarAnimações() {
-		cardapioViewFlipperAnimations = new ViewFlipAnimation();
-		cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
 	}
 }
