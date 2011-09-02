@@ -16,8 +16,8 @@ public class Sincronizer {
 
 	private static final String ENDERECO_API = "http://thiagonascimento.info/olhai/index.php/olhai/api";
 
-	public String getJSONFromAplication(/* String data , String idUniversidade */)
-			throws ClientProtocolException, IOException {
+	public String getJSONFromAplication() throws ClientProtocolException,
+			IOException {
 		HttpEntity entity = conectarHttpEntity();
 		StringBuffer sb = new StringBuffer();
 		if (entity != null) {
