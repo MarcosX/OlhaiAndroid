@@ -31,7 +31,7 @@ public class ListaCardapio extends ListView {
 		detalhesPratos = new ArrayList<String>();
 	}
 
-	public void setInformaçõesPratos(ArrayList<String> dscPratos,
+	public void setInformacoesPratos(ArrayList<String> dscPratos,
 			ArrayList<String> detalhesPratos) {
 		for (String string : detalhesPratos) {
 			this.detalhesPratos.add(string);

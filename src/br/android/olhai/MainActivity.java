@@ -202,19 +202,19 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 	private void setAdapters() {
 		((ListaCardapio) findViewById(R.id.cardapioSegunda))
-				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(0),
+				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(0),
 						cardapioDaSemana.getDetalhesPrato(0));
 		((ListaCardapio) findViewById(R.id.cardapioTerca))
-				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(1),
+				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(1),
 						cardapioDaSemana.getDetalhesPrato(1));
 		((ListaCardapio) findViewById(R.id.cardapioQuarta))
-				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(2),
+				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(2),
 						cardapioDaSemana.getDetalhesPrato(2));
 		((ListaCardapio) findViewById(R.id.cardapioQuinta))
-				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(3),
+				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(3),
 						cardapioDaSemana.getDetalhesPrato(3));
 		((ListaCardapio) findViewById(R.id.cardapioSexta))
-				.setInformaçõesPratos(cardapioDaSemana.getDscNomePrato(4),
+				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(4),
 						cardapioDaSemana.getDetalhesPrato(4));
 	}
 
