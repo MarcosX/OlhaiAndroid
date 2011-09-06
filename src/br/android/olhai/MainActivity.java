@@ -8,39 +8,38 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
-public class MainActivity extends Activity implements OnTouchListener {
+import com.eightbitcloud.pagingscroller.Pager;
+
+public class MainActivity extends Activity {
 
 	private static final int NENHUMA_UNIVERSIDADE_SELECIONADA = 0;
-	private static final int ESPACO_DE_ARRASTE_X = 30;
-	private static final int ESPACO_DE_ARRASTE_Y = 50;
+
+	private Pager scroller;
 
 	private SharedPreferences preferences;
+
 	private CardapioSemana cardapioDaSemana;
 
-	private int diaDaSemana = 0;
 	private int universidadeSelecionada;
-
-	private float downEventX, downEventY;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setOnTouchListeners();
 		cardapioDaSemana = new CardapioSemana();
+		scroller = ((Pager) findViewById(R.id.scrollView));
 
 		// Get the xml/preferences.xml preferences
 		this.preferences = PreferenceManager
@@ -61,22 +60,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 	private void exibirCardapioEDatas() {
 		requistarCardapio();
 		setAdapters();
-		mostrarData();
-	}
-
-	private void setOnTouchListeners() {
-		findViewById(R.id.layoutGlobal).setOnTouchListener(
-				(OnTouchListener) this);
-		findViewById(R.id.cardapioSegunda).setOnTouchListener(
-				(OnTouchListener) this);
-		findViewById(R.id.cardapioTerca).setOnTouchListener(
-				(OnTouchListener) this);
-		findViewById(R.id.cardapioQuarta).setOnTouchListener(
-				(OnTouchListener) this);
-		findViewById(R.id.cardapioQuinta).setOnTouchListener(
-				(OnTouchListener) this);
-		findViewById(R.id.cardapioSexta).setOnTouchListener(
-				(OnTouchListener) this);
 	}
 
 	/**
@@ -201,26 +184,17 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 
 	private void setAdapters() {
-		((ListaCardapio) findViewById(R.id.cardapioSegunda))
-				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(0),
-						cardapioDaSemana.getDetalhesPrato(0));
-		((ListaCardapio) findViewById(R.id.cardapioTerca))
-				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(1),
-						cardapioDaSemana.getDetalhesPrato(1));
-		((ListaCardapio) findViewById(R.id.cardapioQuarta))
-				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(2),
-						cardapioDaSemana.getDetalhesPrato(2));
-		((ListaCardapio) findViewById(R.id.cardapioQuinta))
-				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(3),
-						cardapioDaSemana.getDetalhesPrato(3));
-		((ListaCardapio) findViewById(R.id.cardapioSexta))
-				.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(4),
-						cardapioDaSemana.getDetalhesPrato(4));
-	}
-
-	private void mostrarData() {
-		((TextView) findViewById(R.id.textViewHoje)).setText(cardapioDaSemana
-				.getDataFormatada(diaDaSemana));
+		LayoutInflater layoutInflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		for (int i = 0; i < 5; i++) {
+			View pageView = layoutInflater.inflate(R.layout.page, null);
+			((ListaCardapio) pageView.findViewById(R.id.listaCardapio))
+					.setInformacoesPratos(cardapioDaSemana.getDscNomePrato(i),
+							cardapioDaSemana.getDetalhesPrato(i));
+			((TextView) pageView.findViewById(R.id.textViewHoje))
+					.setText(cardapioDaSemana.getDataFormatada(i));
+			scroller.addPage(pageView);
+		}
 	}
 
 	private void requistarCardapio() {
@@ -236,58 +210,5 @@ public class MainActivity extends Activity implements OnTouchListener {
 			d.show();
 			Log.e("JSON", "IOException: " + e.getMessage());
 		}
-	}
-
-	public boolean onTouch(View v, MotionEvent event) {
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			downEventX = event.getX();
-			downEventY = event.getY();
-			break;
-		case MotionEvent.ACTION_UP:
-			float upEventY = event.getY();
-			if (Math.abs(downEventY - upEventY) > ESPACO_DE_ARRASTE_Y) {
-				return false;
-			}
-			float upEventX = event.getX();
-			if (downEventX - ESPACO_DE_ARRASTE_X > upEventX) {
-				if (diaDaSemana < 4) {
-					flipDireitaParaEsquerda();
-					diaDaSemana++;
-				}
-			} else if (downEventX + ESPACO_DE_ARRASTE_X < upEventX) {
-				if (diaDaSemana > 0) {
-					flipEsquerdaParaDireita();
-					diaDaSemana--;
-				}
-			} else {
-				return false;
-			}
-			mostrarData();
-			return true;
-
-		default:
-			break;
-		}
-		return false;
-	}
-
-	private void flipEsquerdaParaDireita() {
-		ViewFlipper cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-		cardapioViewFlipper.setInAnimation(ViewFlipAnimation.getInstance()
-				.getInFromLeft());
-		cardapioViewFlipper.setOutAnimation(ViewFlipAnimation.getInstance()
-				.getOutToRight());
-		cardapioViewFlipper.showPrevious();
-	}
-
-	private void flipDireitaParaEsquerda() {
-		ViewFlipper cardapioViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipperCardapio);
-		cardapioViewFlipper.setInAnimation(ViewFlipAnimation.getInstance()
-				.getInFromRight());
-		cardapioViewFlipper.setOutAnimation(ViewFlipAnimation.getInstance()
-				.getOutToLeft());
-		cardapioViewFlipper.showNext();
-
 	}
 }
