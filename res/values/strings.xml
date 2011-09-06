@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
-    <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">Olhai! RU</string>    
-    <string name="menuSobreAutor_1">Marcos Antônio</string>
-    <string name="menuSobreAutor_2">Thiago Nascimento</string>
-    <string name="menuSobreAutor_3">Yuri Adams</string>
-    <string name="versaoDoAplicativo">0.4</string>
-    
-    <string-array name="universidadesParticipantes_id" >
-    	 <item >1</item>
-    	 <item >2</item>
-    </string-array>
-    <string-array name="universidadesParticipantes_descricao" >
-    	 <item >UECE</item>
-    	 <item >UFC</item>
-    </string-array>
+
+	<string name="hello">Hello World, MainActivity!</string>
+	<string name="app_name">Olhai! RU</string>
+	<string name="menuSobreAutor_1">Marcos Antônio</string>
+	<string name="menuSobreAutor_2">Thiago Nascimento</string>
+	<string name="menuSobreAutor_3">Yuri Adams</string>
+	<string name="versaoDoAplicativo">0.6</string>
+
+	<string-array name="universidadesParticipantes_id">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
+	<string-array name="universidadesParticipantes_descricao">
+		<item>UECE</item>
+		<item>UFC</item>
+	</string-array>
 </resources>
