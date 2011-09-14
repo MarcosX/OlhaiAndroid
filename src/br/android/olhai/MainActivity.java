@@ -44,17 +44,18 @@ public class MainActivity extends Activity {
 		// Get the xml/preferences.xml preferences
 		this.preferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
 		universidadeSelecionada = getIdUniversidadeSelecionada();
 		if (universidadeSelecionada == NENHUMA_UNIVERSIDADE_SELECIONADA) {
 			executandoPelaPrimeiraVez();
 		} else {
 			exibirCardapioEDatas();
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 
 	private void exibirCardapioEDatas() {
@@ -97,7 +98,6 @@ public class MainActivity extends Activity {
 				editor.putString("universidadesParticipantesListPreference",
 						idUniversidade);
 				editor.commit();
-
 				exibirCardapioEDatas();
 			}
 		});

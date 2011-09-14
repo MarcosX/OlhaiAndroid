@@ -27,13 +27,12 @@ public class CardapioSemana {
 		Sincronizer sincronizer = new Sincronizer();
 		JSONObject jsonObject = (JSONObject) new JSONTokener(
 				sincronizer.getJSONFromAplication()).nextValue();
-		String[] diasDaSemana = { "segunda", "terca", "quarta", "quinta",
-				"sexta" };
-		inserirDadosDoJSON(jsonObject, diasDaSemana);
+		inserirDadosDoJSON(jsonObject);
 	}
 
-	private void inserirDadosDoJSON(JSONObject jsonObject, String[] diasDaSemana)
-			throws JSONException {
+	private void inserirDadosDoJSON(JSONObject jsonObject) throws JSONException {
+		String[] diasDaSemana = { "segunda", "terca", "quarta", "quinta",
+				"sexta" };
 		for (int j = 0; j < 5; j++) {
 			JSONObject jsonCardapioDoDia = jsonObject
 					.getJSONObject(diasDaSemana[j]);

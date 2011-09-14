@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,12 +39,14 @@ public class ListaCardapio extends ListView {
 		}
 		for (String string : dscPratos) {
 			this.dscPratos.add(string);
+			Log.i("ASD", string);
 		}
-		adapter = new ArrayAdapter<String>(superContext,
-				android.R.layout.simple_list_item_1, dscPratos);
-		setAdapter(adapter);
-		setOnItemClickListener(new OnItemClickListener() {
 
+		adapter = new ArrayAdapter<String>(superContext,
+				android.R.layout.simple_list_item_1, this.dscPratos);
+		setAdapter(adapter);
+
+		setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
