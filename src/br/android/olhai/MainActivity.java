@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 	private CardapioSemana cardapioDaSemana;
 
 	private int universidadeSelecionada;
+	private boolean isCardapioCarregado = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,17 +46,19 @@ public class MainActivity extends Activity {
 		this.preferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		universidadeSelecionada = getIdUniversidadeSelecionada();
-		if (universidadeSelecionada == NENHUMA_UNIVERSIDADE_SELECIONADA) {
-			executandoPelaPrimeiraVez();
-		} else {
-			exibirCardapioEDatas();
-		}
+		carregaCardapioSeNecessario();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+	private void carregaCardapioSeNecessario() {
+		if (!isCardapioCarregado) {
+			universidadeSelecionada = getIdUniversidadeSelecionada();
+			if (universidadeSelecionada == NENHUMA_UNIVERSIDADE_SELECIONADA) {
+				executandoPelaPrimeiraVez();
+			} else {
+				exibirCardapioEDatas();
+			}
+			isCardapioCarregado = true;
+		}
 	}
 
 	private void exibirCardapioEDatas() {
@@ -84,7 +87,10 @@ public class MainActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,
 							int itemSelecionado) {
-						MainActivity.this.universidadeSelecionada = itemSelecionado + 1;
+						if (universidadeSelecionada != itemSelecionado + 1) {
+							MainActivity.this.universidadeSelecionada = itemSelecionado + 1;
+							isCardapioCarregado = false;
+						}
 					}
 				});
 
