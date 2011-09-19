@@ -8,7 +8,7 @@ Desenvolvedores:
 
 Versão 0.6
 	- Swipe para esquerda e direita
-	- Atualizando cardápio apenas quando necessário
+	- Atualizando cardápio apenas uma vez por sessão
 
 Versão 0.5
 	- Detalhes do prato ao clicar

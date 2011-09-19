@@ -14,7 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class Sincronizer {
 
-	private static final String ENDERECO_API = "http://thiagonascimento.info/olhai/index.php/olhai/api";
+	private static final String ENDERECO_API = "http://dev.thiagodnf.com/olhai/index.php/olhai/api";
 
 	public String getJSONFromAplication() throws ClientProtocolException,
 			IOException {
